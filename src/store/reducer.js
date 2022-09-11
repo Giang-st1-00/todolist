@@ -1,4 +1,4 @@
-import { ADD_TODO, REMOVE_TODO, SET_TODO_INPUT } from "./constants";
+import {EDIT_TODO_INPUT, ADD_TODO, REMOVE_TODO, SET_TODO_INPUT } from "./constants";
 
 const initState = {
     todos : [],
@@ -23,6 +23,15 @@ function reducer(state , action) {
                 ...state,  
                 todos : states.filter( val => val !== action.payload )
             }
+        case EDIT_TODO_INPUT : 
+            console.log(action.index);
+            console.log(action.payload);
+            let state_edit = [...state.todos];
+            state_edit[action.index] = action.payload;
+            return { 
+                ...state, 
+                todos : state_edit
+            } 
         default : 
             throw new Error('invalid action')
     }

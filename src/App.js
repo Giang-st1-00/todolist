@@ -12,11 +12,12 @@ import {
 import "./App.css";
 import { Context } from "./store/Context";
 import { useStore } from "./store/hooks";
-import { removeTodo, setTodoInput, addTodo } from "./store/actions";
+import { editTodoInput, removeTodo, setTodoInput, addTodo } from "./store/actions";
 
 function App() {
   const [state, dispatch] = useStore();
   const { todos, todoInput } = state;
+  const [inputEdit , setInputEdit] = useState("");
 
   const handleAdd = () => {
     dispatch(addTodo(todoInput));
@@ -28,12 +29,44 @@ function App() {
   };
 
   function focus_edit(index) {
-    console.log(index);
-    var input_job = document.querySelector(`.input_job${index}`);
-    Object.assign(input_job.style , {
-        
+      Object.assign(document.querySelector(`.li_job_${index} .input_job`).style , {
+        display : 'flex',
+      })
+
+      document.querySelector(`.div_${index} .li_job_${index} .input_job`).focus();
+
+      var edit = document.querySelector(`.div_${index} .edit`);
+      Object.assign(edit.style , {
+        display : 'none',
+      })
+      var ok = document.querySelector(`.div_${index} .OK`);
+      Object.assign(ok.style , {
+        display : 'flex',
+      })
+
+      // document.querySelector(`.input_job`).onChange = (e) => {
+      //   dispatch(setTodoInput(e.target.value));
+      // };
+  }
+
+  function sc_edit(index) {
+    Object.assign(document.querySelector(`.li_job_${index} .input_job`).style , {
+      display : 'none',
     })
-    document.querySelector(`.input_job${index}`).focus();
+
+    var edit = document.querySelector(`.div_${index} .edit`);
+    Object.assign(edit.style , {
+      display : 'flex',
+    })
+
+    var ok = document.querySelector(`.div_${index} .OK`);
+    Object.assign(ok.style , {
+      display : 'none',
+    })
+
+    dispatch(editTodoInput(inputEdit,index));
+
+    setInputEdit("")
   }
 
   return (
@@ -61,7 +94,7 @@ function App() {
             onChange={(e) => {
               dispatch(setTodoInput(e.target.value));
             }}
-
+            // disabled
           />
           <button
             onClick={handleAdd}
@@ -78,6 +111,7 @@ function App() {
         <div>
           {todos.map((todo, index) => (
             <div
+              className={`div_${index}`}
               key={index}
               style={{
                 margin: "20px",
@@ -85,22 +119,44 @@ function App() {
                 justifyContent: "space-between",
               }}
             >
-              <input 
-              className={`input_job${index}`}
-              style={{
-                listStyle: "none",
-                backgroundColor: "#fff",
-                width: "80%",
-                fontSize: "25px",
-                padding: "10px 30px",
-                margin: "0 20px",
-                borderRadius: "20px",
-              }}
-              value={todo}
-            //   disabled
-              />
-                <div style={{backgroundColor : 'white', borderRadius : '10px',display : 'flex', justifyContent: 'center', alignItems : 'center'}}>
-                    <div onClick={() => focus_edit(index)} style={{padding : '0 20px',fontSize : '25px'}}>
+              <li
+                className={`li_job_${index}`}
+                style={{
+                  display: 'flex',
+                  backgroundColor: "#fff",
+                  width: "80%",
+                  fontSize: "25px",
+                  padding: "10px 30px",
+                  margin: "0 20px",
+                  borderRadius: "20px",
+                  position : 'relative',
+                }}
+              >
+                {todo}  
+                  <input 
+                    className={`input_job`}
+                    style={{
+                      position : 'absolute',
+                      top : '0',
+                      left : '0',
+                      display: 'none',
+                      backgroundColor: "#fff",
+                      width: "80%",
+                      fontSize: "25px",
+                      padding: "10px 30px",
+                      borderRadius: "20px",
+                    }}
+                    value = {inputEdit}
+                    onChange = {(e) => setInputEdit(e.target.value)}
+                  />
+              </li>
+                <div onClick={() => sc_edit(index)} className="OK" style={{borderRadius : '20px',backgroundColor : 'white',margin : '0 20px',padding : '0 30px',fontSize : '25px',display: 'none',alignItems : 'center'}}>
+                  <div>
+                    OK
+                  </div>
+                </div>
+                <div style={{display : 'flex',backgroundColor : 'white', borderRadius : '10px', justifyContent: 'center', alignItems : 'center'}}>
+                    <div className="edit" onClick={() => focus_edit(index)} style={{padding : '0 20px',fontSize : '25px'}}>
                         EDIT
                     </div>
                 </div>

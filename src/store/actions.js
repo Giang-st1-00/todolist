@@ -1,4 +1,4 @@
-import { SET_TODO_INPUT , ADD_TODO , REMOVE_TODO} from "./constants";
+import { EDIT_TODO_INPUT, SET_TODO_INPUT , ADD_TODO , REMOVE_TODO} from "./constants";
 
 export const setTodoInput = payload => ({
     type : SET_TODO_INPUT,
@@ -16,7 +16,11 @@ export const removeTodo = (payload,index) => ({
     index
 })
 
-
+export const editTodoInput = (payload,index) => ({
+    type : EDIT_TODO_INPUT,
+    payload,
+    index
+})
 
 
 
